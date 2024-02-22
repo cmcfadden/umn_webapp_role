@@ -34,12 +34,15 @@
     seboolean:
       name: "httpd_can_network_connect"
       state: "on"
+      persistent: true
   - name: "enable SELinux boolean to allow httpd to make network connections"
     seboolean:
       name: "httpd_unified"
       state: "on"
+      persistent: true
   - name: "enable SELinux boolean to allow httpd to execmem"
     seboolean:
       name: "httpd_execmem"
       state: "on"
+      persistent: true
   become: true
