@@ -1,2 +1,45 @@
 ---
-# tasks file for umn_sample_role
+- block:
+  - name: "Open https and http ports in firewalld"
+    firewalld:
+      service: "{{ item[0] }}"
+      permanent: yes
+      state: enabled
+      immediate: yes
+      zone: "{{ item[1] }}"
+    loop: "{{ ['http', 'https'] | product(['public', 'Campus', 'Bastions']) | list}}"
+  - name: "Grant deploy user user permissions to write to var/www/html using an acl"
+    acl:
+      path: "/var/www/html/"
+      entity: "{{ deploy_user }}"
+      etype: "user"
+      permissions: "rwx"
+      state: "present"
+    when: deploy_user != None
+  - name: "use acl to grant nginx access to all files in /var/www/html/, recursively"
+    acl:
+      path: "/var/www/html/"
+      entity: "nginx"
+      etype: "user"
+      permissions: "rx"
+      recursive: yes
+      state: "present"
+      default: yes
+  - name: "Set SELinux context for /var/www/html/"
+    community.general.sefcontext:
+      target: "/var/www/html(/.*)?"
+      setype: "httpd_sys_content_t"
+      state: "present"
+  - name: "enable SELinux boolean to allow httpd to make network connections"
+    seboolean:
+      name: "httpd_can_network_connect"
+      state: "on"
+  - name: "enable SELinux boolean to allow httpd to make network connections"
+    seboolean:
+      name: "httpd_unified"
+      state: "on"
+  - name: "enable SELinux boolean to allow httpd to execmem"
+    seboolean:
+      name: "httpd_execmem"
+      state: "on"
+  become: true

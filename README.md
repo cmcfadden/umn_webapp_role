@@ -1,4 +1,4 @@
-Sample Role
+Webapp Role
 =========
 
 This is an empty Ansible role to use as a reference or a source template for developing UMN Ansible Roles. It includes [Molecule](https://ansible.readthedocs.io/projects/molecule/) tests run by GitHub actions.
