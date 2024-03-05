@@ -10,7 +10,7 @@
     loop: "{{ ['http', 'https'] | product(['public', 'Campus', 'Bastions']) | list}}"
   - name: Create /var/www/html
     file:
-      path: "/var/www/html/shared/{{ item }}"
+      path: "/var/www/html/"
       state: directory
       owner: "{{ deploy_user }}"
       group: "nginx"
