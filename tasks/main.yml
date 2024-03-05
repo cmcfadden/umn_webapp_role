@@ -10,11 +10,11 @@
     loop: "{{ ['http', 'https'] | product(['public', 'Campus', 'Bastions']) | list}}"
   - name: Create /var/www/html
     file:
-        path: "/var/www/html/shared/{{ item }}"
-        state: directory
-        owner: {{ deploy_user }}
-        group: "nginx"
-        mode: "0755"
+      path: "/var/www/html/shared/{{ item }}"
+      state: directory
+      owner: {{ deploy_user }}
+      group: "nginx"
+      mode: "0755"
     become: yes
   - name: "Grant deploy user user permissions to write to var/www/html using an acl"
     acl:
