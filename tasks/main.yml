@@ -12,7 +12,7 @@
     file:
       path: "/var/www/html/shared/{{ item }}"
       state: directory
-      owner: {{ deploy_user }}
+      owner: "{{ deploy_user }}"
       group: "nginx"
       mode: "0755"
     become: yes
