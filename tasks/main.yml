@@ -8,6 +8,15 @@
       immediate: yes
       zone: "{{ item[1] }}"
     loop: "{{ ['http', 'https'] | product(['public', 'Campus', 'Bastions']) | list}}"
+  - name: "use acl to grant nginx access to all files in /var/www/, recursively"
+    acl:
+      path: "/var/www/"
+      entity: "nginx"
+      etype: "user"
+      permissions: "rx"
+      recursive: yes
+      state: "present"
+      default: yes
   - name: Create /var/www/html
     file:
       path: "/var/www/html/"
@@ -24,15 +33,6 @@
       permissions: "rwx"
       state: "present"
     when: deploy_user != None
-  - name: "use acl to grant nginx access to all files in /var/www/html/, recursively"
-    acl:
-      path: "/var/www/html/"
-      entity: "nginx"
-      etype: "user"
-      permissions: "rx"
-      recursive: yes
-      state: "present"
-      default: yes
   - name: "Set SELinux context for /var/www/html/"
     community.general.sefcontext:
       target: "/var/www/html(/.*)?"
