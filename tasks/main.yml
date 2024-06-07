@@ -8,6 +8,13 @@
       immediate: yes
       zone: "{{ item[1] }}"
     loop: "{{ ['http', 'https'] | product(['public', 'Campus', 'Bastions']) | list}}"
+  - name: "Create /var/www/ if it doesn't exist"
+    file:
+      path: "/var/www/"
+      state: directory
+      owner: "{{ deploy_user }}"
+      group: "nginx"
+      mode: "0755"
   - name: "use acl to grant nginx access to all files in /var/www/, recursively"
     acl:
       path: "/var/www/"
