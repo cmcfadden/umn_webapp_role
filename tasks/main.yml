@@ -1,5 +1,9 @@
 ---
 - block:
+  - name: "Install git"
+    yum:
+      pkg: "git"
+      state: "present"
   - name: "Open https and http ports in firewalld"
     firewalld:
       service: "{{ item[0] }}"
