@@ -36,7 +36,12 @@
       group: "nginx"
       mode: "0755"
     become: yes
-  - name: "Grant deploy user user permissions to write to var/www/html using an acl"
+  - name: "Set SELinux context for /var/www/html/"
+    community.general.sefcontext:
+      target: "/var/www/html(/.*)?"
+      setype: "httpd_sys_content_t"
+      state: "present"
+  - name: "Grant deploy user permissions to write to var/www/html using an acl"
     acl:
       path: "/var/www/html/"
       entity: "{{ deploy_user }}"
@@ -44,11 +49,6 @@
       permissions: "rwx"
       state: "present"
     when: deploy_user != None
-  - name: "Set SELinux context for /var/www/html/"
-    community.general.sefcontext:
-      target: "/var/www/html(/.*)?"
-      setype: "httpd_sys_content_t"
-      state: "present"
   - name: "enable SELinux boolean to allow httpd to make network connections"
     seboolean:
       name: "httpd_can_network_connect"
@@ -64,4 +64,13 @@
       name: "httpd_execmem"
       state: "on"
       persistent: true
+  - name: Set umask in .bashrc
+    lineinfile:
+      path: "/home/{{ deploy_user }}/.bashrc"
+      regexp: '^umask'
+      line: "umask 0027"
+      create: yes
+      owner: "{{ deploy_user }}"
+      group: "{{ deploy_user }}"
+      mode: '0644'
   become: true
