@@ -52,7 +52,6 @@
   - name: set a rwx mask for /var/www/html
     acl:
       path: "/var/www/html/"
-      entity: "user"
       etype: "mask"
       permissions: "rwx"
       state: "present"
