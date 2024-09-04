@@ -49,6 +49,13 @@
       permissions: "rwx"
       state: "present"
     when: deploy_user != None
+  - name: set a rwx mask for /var/www/html
+    acl:
+      path: "/var/www/html/"
+      entity: "user"
+      etype: "mask"
+      permissions: "rwx"
+      state: "present"
   - name: "enable SELinux boolean to allow httpd to make network connections"
     seboolean:
       name: "httpd_can_network_connect"
