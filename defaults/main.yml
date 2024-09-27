@@ -1,2 +1,3 @@
 ---
 deploy_user: None
+appname_short: "app_name_without_spaces"

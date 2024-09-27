@@ -28,30 +28,30 @@
       recursive: yes
       state: "present"
       default: yes
-  - name: Create /var/www/<hostname>
+  - name: Create /var/www/<appname_short>
     file:
-      path: "/var/www/{{ hostname }}/"
+      path: "/var/www/{{ appname_short }}/"
       state: directory
       owner: "{{ deploy_user }}"
       group: "nginx"
       mode: "0755"
     become: yes
-  - name: "Set SELinux context for /var/www/<hostname>/"
+  - name: "Set SELinux context for /var/www/<appname_short>/"
     community.general.sefcontext:
-      target: "/var/www/{{ hostname}}(/.*)?"
+      target: "/var/www/{{ appname_short}}(/.*)?"
       setype: "httpd_sys_content_t"
       state: "present"
-  - name: "Grant deploy user permissions to write to var/www/<hostname> using an acl"
+  - name: "Grant deploy user permissions to write to var/www/<appname_short> using an acl"
     acl:
-      path: "/var/www/{{ hostname }}/"
+      path: "/var/www/{{ appname_short }}/"
       entity: "{{ deploy_user }}"
       etype: "user"
       permissions: "rwx"
       state: "present"
     when: deploy_user != None
-  - name: set a rwx mask for /var/www/<hostname>
+  - name: set a rwx mask for /var/www/<appname_short>
     acl:
-      path: "/var/www/{{ hostname }}/"
+      path: "/var/www/{{ appname_short }}/"
       etype: "mask"
       permissions: "rwx"
       state: "present"
