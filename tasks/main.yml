@@ -41,6 +41,8 @@
       target: "/var/www/{{ appname_short}}(/.*)?"
       setype: "httpd_sys_content_t"
       state: "present"
+  - name: "Apply SELinux context to existing files in /var/www/<appname_short>/"
+    command: "restorecon -Rv /var/www/{{ appname_short }}"
   - name: "Grant deploy user permissions to write to var/www/<appname_short> using an acl"
     acl:
       path: "/var/www/{{ appname_short }}/"
@@ -68,6 +70,11 @@
   - name: "enable SELinux boolean to allow httpd to execmem"
     seboolean:
       name: "httpd_execmem"
+      state: "on"
+      persistent: true
+  - name: "enable SELinux boolean to allow setrlimits"
+    seboolean:
+      name: "httpd_setrlimit"
       state: "on"
       persistent: true
   - name: Set umask in .bashrc
